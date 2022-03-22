@@ -1,0 +1,43 @@
+var Lima = ee.FeatureCollection('users/nickyastrid17/lima');
+Map.addLayer(Lima,{},'Lima');
+Map.setCenter(-76.524,-11.78,8);
+var collection_prelock2020 = ee.ImageCollection("COPERNICUS/S5P/OFFL/L3_NO2")
+.select('tropospheric_NO2_column_number_density')
+.filterDate('2020-04-01','2020-06-30');
+var band_viz = {min:0, max:0.0002,
+palette:['black','blue','purple','cyan','green','yellow','red']};
+
+var collection_prelock2019 = ee.ImageCollection("COPERNICUS/S5P/OFFL/L3_NO2")
+.select('tropospheric_NO2_column_number_density')
+.filterDate('2019-04-01','2019-06-30');
+
+var collection_prelock2022 = ee.ImageCollection("COPERNICUS/S5P/OFFL/L3_NO2")
+.select('tropospheric_NO2_column_number_density')
+.filterDate('2021-12-01','2022-02-28');
+
+Map.addLayer(collection_prelock2020.max().clip(Lima),band_viz,'S5P NO2 Pre-Lockdown2020',false);
+Map.addLayer(collection_prelock2019.max().clip(Lima),band_viz,'S5P NO2 Pre-Lockdown2019',false);
+Map.addLayer(collection_prelock2022.max().clip(Lima),band_viz,'S5P NO2 Pre-Lockdown2022',false);
+
+
+
+Export.image.toDrive({
+image:collection_prelock2020.max(),
+description:'Max_No2Lockdown2020',
+scale:1500,
+region:Lima
+})
+
+Export.image.toDrive({
+image:collection_prelock2019.max(),
+description:'Max_No2Lockdown2019',
+scale:1500,
+region:Lima
+})
+
+Export.image.toDrive({
+image:collection_prelock2022.max(),
+description:'Max_No2Lockdown2022',
+scale:1500,
+region:Lima
+})
